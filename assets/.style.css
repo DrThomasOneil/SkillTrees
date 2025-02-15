@@ -1,0 +1,248 @@
+p.caption {
+  color: red;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+body {
+  text-align: justify
+}
+hint-text { 
+  color: #AAAAAA; 
+  font-size: 1.2em; 
+  line-height:0.5; 
+}
+read-time { 
+  color: #AAAAAA; 
+  font-size: 1.1em; 
+  line-height:0.5; 
+}
+.clear-both {
+  clear: both;
+}
+
+/*********************
+
+Make the workflowr outputs transparant and smaller! 
+
+**********************/
+
+.btn-workflowr-report {
+  opacity: 0.2;
+  font-size: 0.4em;
+  padding: 2px 6px;
+}
+.btn-workflowr-fig {
+  opacity: 0.2;
+  font-size: 0.2em;
+  padding: 2px 6px;
+}
+
+/*********************
+
+Customer Footer
+
+**********************/
+footer {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.custom-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: white;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+/* Ensures each section (left, center, right) is evenly spaced */
+.custom-footer div {
+  flex: 1;
+  padding: 5px;
+}
+
+/* Styling for the links inside the footer */
+.custom-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.custom-footer a:hover {
+  text-decoration: underline;
+}
+/*********************
+
+Custom lines: Similar to WIMR and one that mimics <br><hr><br>
+
+**********************/
+
+wimr  {
+  display: block;
+  height: 5px;
+  background: linear-gradient(to right, #8B0000, #CC5500, #FFA500, #FFD700);
+  margin: 20px 0;
+  border: none;
+}
+e {
+  display: block;
+  margin: .5em 0;
+  border-top: 1px solid #ddd;
+  padding-top: .5em;
+  padding-bottom: .2em;
+}
+
+/*********************
+
+Custom CSS containers for information.
+
+**********************/
+
+/* Info hint */
+.hint-info {
+  background-color: #e7f3fe;
+  border-left: 4px solid #2196F3;
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-info::before {
+  content: "ℹ️ ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Success hint */
+.hint-success {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-success::before {
+  content: "✔️ ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Warning hint */
+.hint-warning {
+  background-color: #fff3cd;
+  border-left: 4px solid #ff9800;
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-warning::before {
+  content: "⚠️ ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Danger hint */
+.hint-danger {
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-danger::before {
+  content: "❌ ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Goal hint */
+.hint-goals {
+  background-color: #FFE6FF; /* Light pink */
+  border-left: 4px solid #FF40FF; /* Bright pink */
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-goals::before {
+  content: "🎯 ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Practice hint */
+.hint-practice {
+  background-color: #E6F4D7; /* Light green */
+  border-left: 4px solid #4E8F00; /* Dark green */
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-practice::before {
+  content: "🧪 ";
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+/* Terminology hint */
+.hint-terminology {
+  background-color: #FFF4E6; /* Light orange */
+  border-left: 4px solid #FF8C00; /* Orange */
+  padding: 10px 15px 0px;
+  border-radius: 5px;
+  line-height: 2;
+  display: flex;
+  margin: 10px 0;
+}
+.hint-terminology::before {
+  content: "🏷️ "; /* Replace with any suggested symbol above */
+  font-size: 1.5em;
+  margin-right: 15px;
+  padding: 0px 0px 10px;
+  align-items: center;
+  line-height: 1;
+  display: flex;
+}
+
