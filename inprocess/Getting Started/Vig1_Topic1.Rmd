@@ -98,14 +98,14 @@ setwd("~/Desktop/analysis_user_group")
 **I can check my working directory using**
 
 ```{r collapse =T}
-getwd()
+getwd() 
 ```
 
 
 ```{r echo=F, fig.height=2}
 displayQuestion(
   title = "Question 1", 
-  qvalue="mydir <- ", 
+  qvalue="mydir <- ''", 
   nrows=1,
   positive = "✅ Correct! Well done.",
   negative = "❌ Try again. Check your directory",
@@ -113,7 +113,7 @@ displayQuestion(
   Node = "Node1", 
   csvFile = ".questions.csv")
 ```
-
+ 
 <e> 
   
 **You can verify which files are present by using** `list.files()`

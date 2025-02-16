@@ -190,7 +190,7 @@ complete_path <- function(Node = "Node1") {
     h3("Click here to record your progress:"),
     actionButton("update", "Update"),
     br(), br(),
-    textOutput("status")
+    textOutput("status") 
   )
   
   server <- function(input, output, session) {
