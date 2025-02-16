@@ -10,9 +10,8 @@ runtime: shiny
 ---
   
 ```{r setup, include=FALSE}
-source(url("https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.functions.R"))
-knitr::opts_chunk$set(echo = TRUE, collapse=TRUE)
-getwd()
+source(url("https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.functions.R")) 
+knitr::opts_chunk$set(echo = TRUE, collapse=TRUE, root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
 ```
  
 <h2>Leaving behind manual analysis tools</h2>
@@ -106,7 +105,7 @@ getwd()
 ```{r echo=F, fig.height=2}
 displayQuestion(
   title = "Question 1", 
-  qvalue="mydir <-", 
+  qvalue="mydir <- ", 
   nrows=1,
   positive = "✅ Correct! Well done.",
   negative = "❌ Try again. Check your directory",
@@ -115,7 +114,7 @@ displayQuestion(
   csvFile = ".questions.csv")
 ```
 
-<e>
+<e> 
   
 **You can verify which files are present by using** `list.files()`
  

@@ -228,9 +228,8 @@ displayQuestion <- function(title,
                             question, 
                             Node, 
                             csvFile = ".questions.csv") {
-  
   if (!is.null(question) && !is.null(Node)) {
-    quest <- suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
+    quest <- suppressWarnings(read.csv(paste0(myDir,"/",csvFile), stringsAsFactors = FALSE))
     subs <- subset(quest, node == Node & type == question)
     
     # Ensure there's at least one question available
@@ -269,7 +268,7 @@ displayQuestion <- function(title,
           eval(parse(text = input$user_code), envir = .GlobalEnv)
         }, error = function(e) return(paste("Error:", e$message)))
       })
-
+    })
     
     output$code_output <- renderPrint({ user_result() })
     
@@ -294,9 +293,8 @@ displayQuestion <- function(title,
         return(negative)
       }
     })
-    })
+
   }
-  
   shinyApp(ui, server, options = list(height = 200+(23*nrows)))
 }
 
