@@ -133,7 +133,7 @@ This alone makes programming worthwhile: reproducibility is seamless, and the cl
 
   
 ```{r, include=T, warning=F, echo=F}
-run_quiz(Node = "Node1")
+#run_quiz(Node = "Node1")
 ```
 
 ```{r, echo=F}
