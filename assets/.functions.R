@@ -230,7 +230,7 @@ displayQuestion <- function(title,
                             csvFile = ".questions.csv") {
   
   if (!is.null(question) && !is.null(Node)) {
-    quest <- SupressWarningsread.csv(csvFile, stringsAsFactors = FALSE))
+    quest <- SupressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     subs <- subset(quest, node == Node & type == question)
     
     # Ensure there's at least one question available
