@@ -4,11 +4,15 @@ library(fs)
 ########################################################
 # 1) Global Variables (Defined Beforehand)
 ########################################################
-runDashboard <- function(color= "#84E291", label ="My Learning Dashboard"){
+runDashboard <- function(label ="My Learning Dashboard", 
+                         dir = dirname(rstudioapi::getActiveDocumentContext()$path), 
+                         available = "https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.available.csv", 
+                         trees = "https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.trees.csv")
+  {
   creator <- "Dr. Thomas O'Neil"
-  availableDF_raw <- suppressWarnings(read.csv(url("https://raw.githubusercontent.com/DrThomasOneil/CVR-site/refs/heads/master/docs/assets/available.csv")))
-  treeDF        <- suppressWarnings(read.csv(url("https://raw.githubusercontent.com/DrThomasOneil/CVR-site/refs/heads/master/docs/assets/series.csv"))) 
-  myDir <- dirname(rstudioapi::getActiveDocumentContext()$path)   
+  availableDF_raw <- suppressWarnings(read.csv(url(available)))
+  treeDF        <- suppressWarnings(read.csv(url(trees))) 
+  myDir <- dir  
   
   ########################################################
   # 2) Helper Functions
