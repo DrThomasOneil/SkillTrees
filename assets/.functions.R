@@ -6,7 +6,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
   library(stringr)
   
   # If you don't have a .ref.csv file, remove or comment out these lines
-  ref <- SupressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
+  ref <- suppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
   title <- ref[1, Node]
   
   # If you do not need a title from a .ref.csv, just define a static title:
@@ -47,7 +47,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
   server <- function(input, output, session) {
     # Reactive expression for reading the entire CSV
     full_df <- reactive({
-      SupressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
+      suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     })
     
     # Subset for the chosen Node
@@ -196,7 +196,7 @@ complete_path <- function(Node = "Node1") {
   server <- function(input, output, session) {
     observeEvent(input$update, {
       # 1. Read .ref.csv
-      ref <- SuppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
+      ref <- suppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
       
       # 2. Ensure the column exists
       if (!Node %in% colnames(ref)) {
@@ -230,7 +230,7 @@ displayQuestion <- function(title,
                             csvFile = ".questions.csv") {
   
   if (!is.null(question) && !is.null(Node)) {
-    quest <- SupressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
+    quest <- suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     subs <- subset(quest, node == Node & type == question)
     
     # Ensure there's at least one question available
@@ -259,7 +259,7 @@ displayQuestion <- function(title,
   
   server <- function(input, output, session) {
     full_df <- reactive({
-      SuppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
+      suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     })
     
     user_result <- reactive({
@@ -338,7 +338,7 @@ userCode <- function(title,
 }
 footer <- function() {
   # Read CSV once
-  ref_data <- SuppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
+  ref_data <- suppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
   
   # Extract values (assuming row 1 is the correct one)
   creator <- ref_data[1, "creator"]
