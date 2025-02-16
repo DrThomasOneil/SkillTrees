@@ -47,7 +47,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
   server <- function(input, output, session) {
     # Reactive expression for reading the entire CSV
     full_df <- reactive({
-      SupressWarningsread.csv(csvFile, stringsAsFactors = FALSE))
+      SupressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     })
     
     # Subset for the chosen Node

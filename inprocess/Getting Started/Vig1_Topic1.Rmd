@@ -109,7 +109,7 @@ displayQuestion(
   qvalue="mydir <-", 
   nrows=1,
   positive = "✅ Correct! Well done.",
-  negative = "❌ Try again. Check your calculation.",
+  negative = "❌ Try again. Check your  direcroyr,
   question = "Question1", 
   Node = "Node1", 
   csvFile = ".questions.csv")
