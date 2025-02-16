@@ -1,6 +1,2 @@
 X,questions,correct,submitted,result,node,type
-1,Test Question 1 (A)<br> A) Test<br> B) Test<br> C) Test<br> D) Test,A,A,1,Node1,mcq
-2,Test Question (B)<br> A) Test<br> B) Test<br> C) Test<br> D) Test,B,A,1,Node1,mcq
-3,Set answer as your current directory:,getwd(),,1,Node1,Q1
-4,Test Question (C)<br> A) Test<br> B) Test<br> C) Test<br> D) Test,C,C,NA,Node2,
-5,Test Question (D)<br> A) Test<br> B) Test<br> C) Test<br> D) Test,D,C,NA,Node2,
+1,Set your directory:,getwd(),,,Node1,Question1

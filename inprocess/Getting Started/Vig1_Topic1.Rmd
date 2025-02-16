@@ -5,13 +5,14 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     df_print: paged
-    css: /Users/thomasoneil/Desktop/roadmaps/.style.css 
+    css: https://drthomasoneil.github.io/CVR-site/assets/.style.css
 runtime: shiny
 ---
   
 ```{r setup, include=FALSE}
-source("../.functions.R") 
+source(url("https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.functions.R"))
 knitr::opts_chunk$set(echo = TRUE, collapse=TRUE)
+getwd()
 ```
  
 <h2>Leaving behind manual analysis tools</h2>
@@ -61,13 +62,6 @@ Unlike with Excel or Prism, you won’t be double-clicking cells. If you want to
 my_data[5,3] <- new_value
 ```
 
-```{r echo=F, fig.height=2}
-userCode(title = "Interactive Session", 
-         question_text = "Test R code:",
-                qvalue="answer <- \"\"\nanswer\n", 
-                nrows=3)
-```
-
 ... and so you'll need to learn quickly to be specific.
 
 Eventually, you’ll learn to automate repetitive tasks, such as finding all rows containing “CD45RA” or “CD4.” Before long, you’ll understand that formatting data consistently—e.g. avoiding spaces in column names—saves you from constant reformatting or code breakage. An accidental space in something like `Sample Number` becomes `Sample.Number`, and your existing scripts may fail.
@@ -106,6 +100,19 @@ setwd("~/Desktop/analysis_user_group")
 
 ```{r collapse =T}
 getwd()
+```
+
+
+```{r echo=F, fig.height=2}
+displayQuestion(
+  title = "Question 1", 
+  qvalue="mydir <-", 
+  nrows=1,
+  positive = "✅ Correct! Well done.",
+  negative = "❌ Try again. Check your calculation.",
+  question = "Question1", 
+  Node = "Node1", 
+  csvFile = ".questions.csv")
 ```
 
 <e>
