@@ -1,5 +1,7 @@
 library(shiny)
 library(fs)   
+library(shinyalert)
+
 
 ########################################################
 # 1) Global Variables (Defined Beforehand)
@@ -228,7 +230,13 @@ runDashboard <- function(label ="My Learning Dashboard",
   ########################################################
   
   server <- function(input, output, session) {
-    
+    shinyalert(
+      title = "Attribution Notice",
+      text = 'This app was originally developed by <strong>Thomas O\'Neil</strong>.<br><br>If you enjoy using it, please consider <strong><a href="https://paypal.me/drthomasoneil?country.x=AU&locale.x=en_AU">donating.</strong>',
+      type = "success",
+      timer = 5000,    # 5000 milliseconds = 5 seconds
+      showConfirmButton = FALSE, html=T
+    )
     ########################################################
     # 4.1 Build local branch
     ########################################################
@@ -510,5 +518,4 @@ runDashboard <- function(label ="My Learning Dashboard",
     })
   }
   shinyApp(ui, server)
-}
-runDashboard()
+};
