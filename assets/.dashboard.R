@@ -69,8 +69,8 @@ runDashboard <- function(label ="My SkillTree Dashboard",
     
     fractions <- sapply(unode, function(vg) {
       subRows <- qdf[qdf$node==vg, ]
-      mean(subRows$correct == subRows$submitted, na.rm=TRUE)
-    })
+      mean(subRows$result, na.rm = TRUE)
+      })
     mean(fractions, na.rm=TRUE)
   }
   buildLocalBranchInfo <- function(myDir) {

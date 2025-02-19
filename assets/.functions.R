@@ -239,40 +239,58 @@ complete_path <- function(Node = "Node1") {
       # 4. Overwrite the .ref.csv file
       write.csv(ref, ".ref.csv", row.names = FALSE)
       
-      # 5. Display a confirmation in the app
+      # 5. Read questions
+      qu <- suppressWarnings(read.csv(".questions.csv"))
+      for(i in 1:nrow(qu)){
+        if(qu$type[i] == 'mcq' & qu&node[i] == Node){
+          if(qu$correct[i] == qu$submitted[i]){
+            qu$result[i]=1
+          } else {
+            qu$result[i]=0
+          }
+        } 
+      }
+      # Display a confirmation in the app
       output$status <- renderText("Progress recorded!")
     })
   }
   shinyApp(ui, server, options = list(height = 130))
 }
 
-displayQuestion <- function(title, 
-                            qvalue="answer <-", 
+displayQuestion <- function(title,
+                            qvalue="answer <-",
                             nrows=5,
                             positive = "✅ Correct! Well done.",
-                            negative = "❌ Try again. Check your calculation.",
-                            question, 
-                            Node, 
+                            negative = "❌ Try again. Check your answer",
+                            question,
+                            Node,
                             csvFile = ".questions.csv") {
   if (!is.null(question) && !is.null(Node)) {
     quest <- suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
-    subs <- subset(quest, node == Node & type == question)
     
-    # Ensure there's at least one question available
-    if (nrow(subs) == 0) {
+    # We might have multiple rows with the same node & type == question.
+    # We'll pick the first row for display.
+    rowsMatching <- which(quest$node == Node & quest$type == question)
+    
+    if (length(rowsMatching) == 0) {
       stop("No questions found for the given Node and Question type.")
     }
     
-    question_text <- subs$question[1]
+    # We'll store the index of that single row
+    singleIndex <- rowsMatching[1]
+    
+    # Extract the question text
+    question_text <- quest$question[singleIndex]
   } else {
     question_text <- "Write and execute your R code below:"
+    singleIndex <- NA  # We'll ignore if there's no question
   }
   
   ui <- fluidPage(
     titlePanel(title),
     
     # User-editable R code
-    textAreaInput("user_code", label = subs$question[1], 
+    textAreaInput("user_code", label = question_text,
                   value = qvalue,
                   rows = nrows, width = "100%"),
     
@@ -283,46 +301,71 @@ displayQuestion <- function(title,
   )
   
   server <- function(input, output, session) {
+    # We'll read the full CSV on the fly
     full_df <- reactive({
       suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     })
     
+    # Evaluate user code
     user_result <- reactive({
       input$run_code
       isolate({
         tryCatch({
           eval(parse(text = input$user_code), envir = .GlobalEnv)
-        }, error = function(e) return(paste("Error:", e$message)))
+        }, error = function(e) {
+          return(paste("Error:", e$message))
+        })
       })
     })
     
-    output$code_output <- renderPrint({ user_result() })
+    output$code_output <- renderPrint({
+      user_result()
+    })
     
+    # If question or node is NULL, we skip the feedback logic
     if (is.null(question) || is.null(Node)) return()
     
     output$feedback <- renderPrint({
-      subtmp <- subs  # Use the filtered dataset
-      expected_value <- tryCatch({
-        eval(parse(text = subtmp$correct[1]), envir = .GlobalEnv)
-      }, error = function(e) return(NA))
+      dfAll <- full_df()
       
-      # Ensure the expected value exists
-      if (!is.null(user_result()) && !is.na(expected_value) && identical(user_result(), expected_value)) {
-        subm_quest <- full_df()
-        subm_quest[subm_quest$node == Node & subm_quest$type == question, "result"] <- 1
-        write.csv(subm_quest, csvFile, row.names = FALSE)
+      # Check if singleIndex is valid
+      if (is.na(singleIndex) || singleIndex < 1 || singleIndex > nrow(dfAll)) {
+        return("Internal error: question row index is invalid.")
+      }
+      
+      # Extract the expected 'correct' expression from that row
+      # If 'correct' doesn't exist, we skip the check
+      if (!"correct" %in% colnames(dfAll)) {
+        return("No 'correct' column found in questions CSV.")
+      }
+      
+      # Evaluate the correct expression in .GlobalEnv
+      expected_value <- tryCatch({
+        eval(parse(text = dfAll$correct[singleIndex]), envir = .GlobalEnv)
+      }, error = function(e) {
+        return(NA)
+      })
+      
+      # Compare user's result with expected_value
+      user_val <- user_result()
+      
+      # If user_val is exactly the same as expected_value => correct
+      # We'll store 1 or 0 in 'result' column for that single row
+      if (!is.null(user_val) && !is.na(expected_value) && identical(user_val, expected_value)) {
+        dfAll$result[singleIndex] <- 1
+        write.csv(dfAll, csvFile, row.names = FALSE)
         return(positive)
       } else {
-        subm_quest <- full_df()
-        subm_quest[subm_quest$node == Node & subm_quest$type == question, "result"] <- 0
-        write.csv(subm_quest, csvFile, row.names = FALSE)
+        dfAll$result[singleIndex] <- 0
+        write.csv(dfAll, csvFile, row.names = FALSE)
         return(negative)
       }
     })
-
   }
-  shinyApp(ui, server, options = list(height = 200+(23*nrows)))
+  
+  shinyApp(ui, server, options = list(height = 200 + (23*nrows)))
 }
+
 
 
 userCode <- function(title, 
