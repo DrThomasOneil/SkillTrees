@@ -17,6 +17,6 @@
 .Renviron
 
 # Dev folders
-inprogress/
+inprocess/*
 forDevs/
-
+index.md
