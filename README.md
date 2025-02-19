@@ -51,74 +51,14 @@ SkillTrees is content-agnostic. You can:
 
 **Host or Distribute**: You can provide the portal as a local zip or GitHub repository. Colleagues can run the Shiny app, scan their own local subfolders, and optionally pull your `available.csv` if they want to see your curated vignettes.
 
-## Creating new content:
+# Getting Started
 
-### Creating a new Branch
+1. Create a `/SkillTrees` folder that you will use for this app. 
+2. Either download the dashboard.R directly from GitHub, or move to that directory and type:  
+download.file(url("https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/dashboard.R"), "dashboard.R", method="auto")
 
-Each Branch is a self-contained learning module (or “roadmap”) located in a dedicated folder. Inside this folder, you must have:
+If you're a developer wanting the templates for developing your own Skill Trees, please reach out to me (thomas.oneil@sydney.edu.au) for the starter kit. 
 
-- **.ref.csv** — Describes the Branch’s metadata (name, creator, difficulty rating, theme, short description, and a set of “nodes”).  
-- **.questions.csv (optional)** — Contains question-answer pairs for computing user “marks” or progress in this Branch.
 
-#### .ref.csv 
-
-branch | creator | charity | key | rating | theme | descript | Node1 | Node*N* |
---- |--- |--- |--- |--- |--- |--- |--- |--- | 
-Getting Started in Data Analysis | [yourname] | [donation] |[key] |[1-5] |[theme] |[description] | [NodeKey] | [NodeKey...] |
-| | [yourlinks] | [donationlink] |  | | | | 1| | 
-| | | | | | | | [date] | [date] |
-
-- **branch**: A descriptive title for your Branch or learning module (e.g., “Getting Started in Data Analysis”). 
-- **creator**: Your name or handle, so users know who authored the content. Optionally, you can link personal pages or other references.  
-- **charity**: A placeholder that can direct users to a donation or philanthropic cause. Could be your institute or a research group link. 
-- **key**: The most critical field - a unique string that aligns with the rest of the SkillTrees dashboard. This key must match the references in `available.csv` and any other places referencing this Branch. 
-- **rating**: A difficulty rating (1 to 5). The dashboard uses this value to show star icons, helping users see how challenging the Branch might be.   
-- **theme**: A top-level category (e.g., “Finance,” “Imaging,” “HR,” or “Data Science”).  
-- **descript**: A short description of the Branch content. This may appear in the UI under “My Branches” or other sections.  
-- **nodes**: Each column from Node1 through NodeN represents a discrete sub-topic or “vignette” within this Branch.  
-  - *Row 1*: The “title” or “key” of that node. 
-  - *Row 2*: Holds 1 when the user has completed that node, or 0/NA if not. 
-  - *Row 3*: A date stamp or other info (e.g., date/time of completion).  
-
-<details><summary>**Creator and Charity**</summary>
-
-Given the open-source nature of this content distribution, we added these fields so creators could potentially receive compensation via donations, and designate a charity or institute as a donation beneficiary. This remains optional for each Branch and will be called using the `footer()` function.
-
-</details>
-
-<hr>
-
-#### .questions.csv 
-
-If you want to incorporate question-answer logic (like multiple choice quizzes), create a `.questions.csv` in the same folder. The app can read these to compute a “mark” (percent correct) for each Branch. Typically, `.questions.csv` has columns like:
-
-**questions**
-
-Displays the question using html format.  
-E.g. for multiple choice questions.
-What is the Capity City of Australia?<br> A) Sydney<br> B) Melbourne<br> C) Canberra<br> D) Adelaide<br>  
-E.g. for coding related questions: Set your directory:
-
-**correct** 
-Stores the correct answer, For mcq, this would be A-D. For coding related questions, it can be an expected input string ("answer") OR an expected 
-submitted response (getwd())
-
-**result**  
-Should remain empty and will store the users responses. 
-
-**node**  
-This will be a key that lets the functions used in a vignette know which question to display and which row to store answers. 
-E.g. if 'Node1', you would use 'Node1' as an argument in the Vignette. 
-
-**type**  
-This needs to be either `mcq` for quiz-style questions, or something identifiable for individual questions, like `Question 1`. 
-
-### Publishing the Branch
-
-1. Once all of the Nodes have been created and the `.ref.csv` and `.questions.csv` files finalised, duplicate the incomplete Branch and check that it can be completed to 100% (*if you don't duplicate and test the questions, the .questions.csv will fill up with values!*).  
-2. Zip the folder 
-3. Adjust the `available.csv` file. (**IMPORTANT**: the key here should match the Branch key in `.ref.csv`!). These items are used as information for branches in the dashboard. 
-4. If you're using GitHub for distribution, push the zip to your public GitHub site and paste the download link to the *download* column (e.g. might look like *https://github.com/DrThomasOneil/CVR-site/raw/refs/heads/master/docs/assets/python.zip*)  
-5. If applicable, adjust the `trees.csv`. The key can be appended to an existing tree. Trees in the dashboard are ordered based on progress, but the Branches within the tree are based on the order they appear in this document. 
 
 

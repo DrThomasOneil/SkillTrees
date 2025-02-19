@@ -1,22 +1,25 @@
 library(readr)
 
 
-run_quiz <- function(Node = "", csvFile = ".questions.csv") {
+run_quiz <- function(Node = "", csvFile = ".questions.csv", show_answers=T) {
   library(shiny)
   library(stringr)
   
-  # If you don't have a .ref.csv file, remove or comment out these lines
+  # If you have a .ref.csv that can provide a title:
+  # if you do not need it, you can comment out these lines
   ref <- suppressWarnings(read.csv(".ref.csv", stringsAsFactors = FALSE))
-  title <- ref[1, Node]
-  
-  # If you do not need a title from a .ref.csv, just define a static title:
-  title <- paste("Quiz for", title)
+  titleVal <- if (!Node %in% colnames(ref)) {
+    # fallback if Node not found in ref
+    paste("Quiz for", Node)
+  } else {
+    paste("Quiz for", ref[1, Node])
+  }
   
   ###########################################################################
   # UI
   ###########################################################################
   ui <- fluidPage(
-    titlePanel(title),
+    titlePanel(titleVal),
     br(),
     
     # Display the current question
@@ -45,49 +48,65 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
   # Server
   ###########################################################################
   server <- function(input, output, session) {
-    # Reactive expression for reading the entire CSV
+    # 1) Read the entire CSV
     full_df <- reactive({
       suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     })
     
-    # Subset for the chosen Node
+    # 2) Subset for the chosen Node with type == "mcq"
+    #    Also store the original row indices
     sub_df <- reactive({
-      subset(full_df(), node == Node & type == "mcq")
+      dfAll <- full_df()
+      # which(...) finds the row indices
+      theseRows <- which(dfAll$node == Node & dfAll$type == "mcq")
+      if (length(theseRows) == 0) {
+        return(data.frame())
+      }
+      
+      # Make a subset
+      dfSubset <- dfAll[theseRows, , drop = FALSE]
+      # Store original row indices so we can write back exactly
+      dfSubset$origIndex <- theseRows
+      dfSubset
     })
     
-    # Store the quiz state
+    # 3) Reactive values for quiz state
     rvals <- reactiveValues(
-      df = NULL,             # The subset for this Node
+      df = NULL,             # The subset for this Node (including origIndex)
       questionIndex = 1,     # Current question index
       userAnswers = NULL,    # Vector storing the user's answers
       showResults = FALSE,   # Whether to display final results
       allDone = FALSE        # Flag to indicate all questions answered
     )
     
-    # Reset or init the quiz
+    # Helper function to reset to the beginning
     resetQuiz <- function() {
       dfSubset <- sub_df()
       
       if (nrow(dfSubset) == 0) {
         showModal(modalDialog(
           title = "No Questions Found",
-          paste("No questions found for Node =", Node),
+          paste("No MCQ questions found for Node =", Node),
           easyClose = TRUE
         ))
         return(NULL)
       }
       
-      # Ensure the 'correct' column exists in the dataset
+      # Ensure the 'correct' column exists
       if (!"correct" %in% colnames(dfSubset)) {
-        dfSubset$correct <- rep(NA_integer_, nrow(dfSubset))
+        dfSubset$correct <- rep(NA_character_, nrow(dfSubset))
+      }
+      # Also ensure there's a 'submitted' col, optionally
+      if (!"submitted" %in% colnames(dfSubset)) {
+        dfSubset$submitted <- rep(NA_character_, nrow(dfSubset))
       }
       
       # Keep the original order, no shuffling
       rvals$df <- dfSubset
       rvals$questionIndex <- 1
+      rvals$showResults <- FALSE
+      rvals$allDone <- FALSE
       rvals$userAnswers <- rep(NA_character_, nrow(dfSubset))
-      rvals$showResults = FALSE
-      rvals$allDone = FALSE
     }
     
     # Call reset on start
@@ -95,7 +114,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
       resetQuiz()
     }, ignoreInit = FALSE)
     
-    # If user hits Reset, do it again
+    # If user hits Reset
     observeEvent(input$reset, {
       resetQuiz()
     })
@@ -116,23 +135,28 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
     
     # Submit Quiz button
     observeEvent(input$submitFinal, {
-      # Make sure we save the user's last choice
+      # Save the user's final answer for the current question
       rvals$userAnswers[rvals$questionIndex] <- input$answer
       
-      # Store user's answers
+      # Fill the 'submitted' column in rvals$df
       rvals$df$submitted <- rvals$userAnswers
       
-      # Check correctness and assign 1 if correct
+      # If there's a 'correct' col, we can check correctness
       rvals$df$result <- ifelse(rvals$df$submitted == rvals$df$correct, 1, 0)
       
-      # Show the results
+      # Indicate final results
       rvals$showResults <- TRUE
       
-      # Overwrite only the relevant rows in .questions.csv
+      # 4) Write back EXACT rows in the main CSV
       dfAll <- full_df()
-      idx <- which(dfAll$node == Node)
-      dfAll$submitted[idx] <- rvals$df$submitted
-      dfAll$correct[idx] <- rvals$df$correct  # Save correctness column
+      
+      # For each row in rvals$df, we have an original index in 'origIndex'
+      # We'll write the 'submitted' and 'correct' columns back
+      for (i in seq_len(nrow(rvals$df))) {
+        orig <- rvals$df$origIndex[i]
+        dfAll$submitted[orig] <- rvals$df$submitted[i]
+        dfAll$correct[orig]   <- rvals$df$correct[i]
+      }
       
       write.csv(dfAll, csvFile, row.names = FALSE)
     })
@@ -146,7 +170,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
       }
     })
     
-    # Display a message if we're at the last question but not yet submitted
+    # Display a message if all Qs are done but not yet submitted
     output$allDoneMsg <- renderText({
       if (rvals$allDone && !rvals$showResults) {
         "All done. Submit the quiz to see your results."
@@ -156,17 +180,19 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
     })
     
     # Show final table after submission
-    output$resultsTable <- renderTable({
-      if (rvals$showResults) {
-        data.frame(
-          Question = rvals$df$question,
-          Correct_Answer = rvals$df$correct,
-          Submitted = rvals$df$submitted,
-          stringsAsFactors = FALSE
-        )
-      }
-    }, sanitize.text.function = function(x) x)
-    
+    if(show_answers){
+      output$resultsTable <- renderTable({
+        if (rvals$showResults) {
+          data.frame(
+            Question = rvals$df$question,
+            Correct_Answer = rvals$df$correct,
+            Submitted = rvals$df$submitted,
+            stringsAsFactors = FALSE
+          )
+        }
+      }, sanitize.text.function = function(x) x)
+    }
+
     # Final score text
     output$scoreText <- renderText({
       if (rvals$showResults) {
@@ -181,7 +207,7 @@ run_quiz <- function(Node = "", csvFile = ".questions.csv") {
   ###########################################################################
   # Run the App
   ###########################################################################
-  shinyApp(ui = ui, server = server,options = list(height = 400))
+  shinyApp(ui = ui, server = server, options = list(height = 400))
 }
 
 
