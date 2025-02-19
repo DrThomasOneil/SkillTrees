@@ -6,7 +6,7 @@ library(shinyalert)
 ########################################################
 # 1) Global Variables (Defined Beforehand)
 ########################################################
-runDashboard <- function(label ="My Learning Dashboard", 
+runDashboard <- function(label ="My SkillTree Dashboard", 
                          dir = dirname(rstudioapi::getActiveDocumentContext()$path), 
                          available = "https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.available.csv", 
                          trees = "https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/assets/.trees.csv")
@@ -235,7 +235,7 @@ runDashboard <- function(label ="My Learning Dashboard",
       text = 'This app was originally developed by <strong>Thomas O\'Neil</strong>.<br><br>If you enjoy using it, please consider <strong><a href="https://paypal.me/drthomasoneil?country.x=AU&locale.x=en_AU">donating.</strong>',
       type = "success",
       timer = 5000,    # 5000 milliseconds = 5 seconds
-      showConfirmButton = FALSE, html=T
+      showConfirmButton = T, html=T
     )
     ########################################################
     # 4.1 Build local branch
@@ -519,3 +519,5 @@ runDashboard <- function(label ="My Learning Dashboard",
   }
   shinyApp(ui, server)
 };
+
+
