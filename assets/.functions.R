@@ -1,7 +1,9 @@
 library(readr)
 
 
-run_quiz <- function(Node = "", csvFile = ".questions.csv", show_answers=T) {
+run_quiz <- function(Node = "", 
+                     csvFile = ".questions.csv", 
+                     show_answers=T) {
   library(shiny)
   library(stringr)
   
@@ -240,18 +242,21 @@ complete_path <- function(Node = "Node1") {
       write.csv(ref, ".ref.csv", row.names = FALSE)
       
       # 5. Read questions
-      qu <- suppressWarnings(read.csv(".questions.csv"))
-      for(i in 1:nrow(qu)){
-        if(qu$type[i] == 'mcq' & qu$node[i] == Node){
-          if(qu$correct[i] == qu$submitted[i]){
-            qu$result[i]=1
+      qu <- suppressWarnings(read.csv(".questions.csv"), row)
+      for (i in seq_len(nrow(qu))) {
+        if (qu$type[i] == "mcq" && qu$node[i] == Node) {
+          # Compare correct vs. submitted
+          if (qu$correct[i] == qu$submitted[i]) {
+            qu$result[i] <- 1
           } else {
-            qu$result[i]=0
+            qu$result[i] <- 0
           }
-        } else {
-          qu$result[i]=1
+        } else if (qu$type[i] != "mcq" && qu$node[i] == Node) {
+          qu$result[i] <- 1
         }
       }
+      write.csv(qu, ".questions.csv", row.names = FALSE)
+      
       # Display a confirmation in the app
       output$status <- renderText("Progress recorded!")
     })
