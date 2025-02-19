@@ -242,7 +242,7 @@ complete_path <- function(Node = "Node1") {
       # 5. Read questions
       qu <- suppressWarnings(read.csv(".questions.csv"))
       for(i in 1:nrow(qu)){
-        if(qu$type[i] == 'mcq' & qu&node[i] == Node){
+        if(qu$type[i] == 'mcq' & qu$node[i] == Node){
           if(qu$correct[i] == qu$submitted[i]){
             qu$result[i]=1
           } else {
