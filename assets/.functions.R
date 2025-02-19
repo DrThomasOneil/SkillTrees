@@ -248,7 +248,9 @@ complete_path <- function(Node = "Node1") {
           } else {
             qu$result[i]=0
           }
-        } 
+        } else {
+          qu$result[i]=1
+        }
       }
       # Display a confirmation in the app
       output$status <- renderText("Progress recorded!")
@@ -352,12 +354,8 @@ displayQuestion <- function(title,
       # If user_val is exactly the same as expected_value => correct
       # We'll store 1 or 0 in 'result' column for that single row
       if (!is.null(user_val) && !is.na(expected_value) && identical(user_val, expected_value)) {
-        dfAll$result[singleIndex] <- 1
-        write.csv(dfAll, csvFile, row.names = FALSE)
         return(positive)
       } else {
-        dfAll$result[singleIndex] <- 0
-        write.csv(dfAll, csvFile, row.names = FALSE)
         return(negative)
       }
     })

@@ -73,7 +73,7 @@ Each local roadmap can have a `.questions.csv` used to compute an overall “mar
 `download.file(url("https://raw.githubusercontent.com/DrThomasOneil/SkillTrees/refs/heads/main/dashboard.R"), "dashboard.R", method="auto")` 
 3.  Run the app using runDashboard(). Adjust the `available` and `trees` links as needed. The default is set to the default Intro to R link.
 
-If you're a developer wanting the templates for developing your own **SkillTrees**, please reach out to me (thomas.oneil@sydney.edu.au) for the starter kit. 
+If you're an educator or developer wanting the templates for developing your own **SkillTrees**, please reach out to me (thomas.oneil@sydney.edu.au) for the starter kit. 
 
 <wimr>
 
