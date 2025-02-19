@@ -1,0 +1,22 @@
+# History files
+.Rhistory
+.Rapp.history
+.DS_Store
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# RStudio files
+.Rproj.user/
+
+# R Environment Variables
+.Renviron
+
+# Dev folders
+inprogress/
+forDevs/
+
