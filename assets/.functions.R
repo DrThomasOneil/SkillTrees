@@ -271,7 +271,8 @@ displayQuestion <- function(title,
                             negative = "❌ Try again. Check your answer",
                             question,
                             Node,
-                            csvFile = ".questions.csv") {
+                            csvFile = ".questions.csv", 
+                            out_height=NULL) {
   if (!is.null(question) && !is.null(Node)) {
     quest <- suppressWarnings(read.csv(csvFile, stringsAsFactors = FALSE))
     
@@ -365,7 +366,9 @@ displayQuestion <- function(title,
       }
     })
   }
-  
+  if(is.null(out_height)){
+    out_height = 200 + (23 * nrows)
+  }
   shinyApp(ui, server, options = list(height = 200 + (23*nrows)))
 }
 
@@ -374,7 +377,8 @@ displayQuestion <- function(title,
 userCode <- function(title, 
                             qvalue="answer <-", 
                             nrows=5,
-                     question_text = NULL) {
+                     question_text = NULL, 
+                     out_height=NULL) {
   # Define UI
   ui <- fluidPage(
     titlePanel(title),
@@ -404,7 +408,10 @@ userCode <- function(title,
   }
   
   # Run the Shiny App
-  shinyApp(ui, server, options = list(height = 200 + (23 * nrows)))
+  if(is.null(out_height)){
+    out_height = 200 + (23 * nrows)
+  }
+  shinyApp(ui, server, options = list(height = out_height))
 }
 footer <- function() {
   # Read CSV once
